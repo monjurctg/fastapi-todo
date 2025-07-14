@@ -4,8 +4,12 @@ from typing import List
 
 app = FastAPI()
 
-# In-memory data store
-todos = []
+# In-memory data store with some static todos
+todos = [
+    {"id": 1, "task": "Learn FastAPI"},
+    {"id": 2, "task": "Build a To-Do app"},
+    {"id": 3, "task": "Deploy to Render"},
+]
 
 # Request model
 class Todo(BaseModel):
@@ -21,16 +25,16 @@ def get_todos():
 @app.post("/todos", response_model=Todo)
 def create_todo(todo: Todo):
     for t in todos:
-        if t.id == todo.id:
+        if t["id"] == todo.id:  # Access dictionary keys with []
             raise HTTPException(status_code=400, detail="ID already exists")
-    todos.append(todo)
+    todos.append(todo.dict())  # Convert Pydantic model to dict before appending
     return todo
 
 # Delete a todo by ID
 @app.delete("/todos/{todo_id}")
 def delete_todo(todo_id: int):
     for i, t in enumerate(todos):
-        if t.id == todo_id:
+        if t["id"] == todo_id:
             todos.pop(i)
             return {"message": "Todo deleted"}
     raise HTTPException(status_code=404, detail="Todo not found")
