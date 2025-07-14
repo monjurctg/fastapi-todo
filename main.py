@@ -45,5 +45,5 @@ def get_todo(todo_id:int):
     for todo in todos:
         if todo['id']==todo_id:
             return {"todo":todo}
-        raise HTTPException(status_code=404,detail="Todo not found")
+    raise HTTPException(status_code=404,detail="Todo not found")
 
