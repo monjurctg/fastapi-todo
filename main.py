@@ -38,3 +38,12 @@ def delete_todo(todo_id: int):
             todos.pop(i)
             return {"message": "Todo deleted"}
     raise HTTPException(status_code=404, detail="Todo not found")
+
+
+@app.get("/todos/{todo_id}")
+def get_todo(todo_id:int):
+    for todo in todos:
+        if todo['id']==todo_id:
+            return {"todo":todo}
+        raise HTTPException(status_code=404,detail="Todo not found")
+
